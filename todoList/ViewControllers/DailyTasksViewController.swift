@@ -38,7 +38,7 @@ class DailyTasksViewController: UIViewController{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//
+        
         self.title = Date.getCurrentDate()
         // Cell 등록
         let nibName = UINib(nibName: TodoTableViewCell.nibName, bundle: nil)
