@@ -3,15 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		01F3C41029F68794000F6653 /* CurrentWeather.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F3C40F29F68794000F6653 /* CurrentWeather.swift */; };
 		01F3C41229F69CDD000F6653 /* WeatherCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F3C41129F69CDD000F6653 /* WeatherCollectionViewCell.swift */; };
-		0A6EEEA829F7B9FA0097CAB7 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0A6EEEA729F7B9FA0097CAB7 /* FirebaseAnalytics */; };
-		0A6EEEAA29F7B9FA0097CAB7 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 0A6EEEA929F7B9FA0097CAB7 /* FirebaseCrashlytics */; };
-		0A6EEEB129F7BEE70097CAB7 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0A6EEEB029F7BEE70097CAB7 /* GoogleService-Info.plist */; };
+		01F3E28B29F93105000F6653 /* WeatherViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F3E28A29F93105000F6653 /* WeatherViewModel.swift */; };
 		1A313B5026A6F45A00927EC3 /* TodoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A313B4F26A6F45A00927EC3 /* TodoViewModel.swift */; };
 		1A313B5626A70B3E00927EC3 /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A313B5526A70B3E00927EC3 /* DateFormatter+Extensions.swift */; };
 		1A313B5A26A70BFF00927EC3 /* Todo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A313B5926A70BFF00927EC3 /* Todo.swift */; };
@@ -50,7 +48,7 @@
 /* Begin PBXFileReference section */
 		01F3C40F29F68794000F6653 /* CurrentWeather.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentWeather.swift; sourceTree = "<group>"; };
 		01F3C41129F69CDD000F6653 /* WeatherCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherCollectionViewCell.swift; sourceTree = "<group>"; };
-		0A6EEEB029F7BEE70097CAB7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		01F3E28A29F93105000F6653 /* WeatherViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherViewModel.swift; sourceTree = "<group>"; };
 		110973FFC8B1AC8979B53185 /* Pods_todoList_todoListTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_todoList_todoListTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A313B4F26A6F45A00927EC3 /* TodoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoViewModel.swift; sourceTree = "<group>"; };
 		1A313B5526A70B3E00927EC3 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DateFormatter+Extensions.swift"; path = "Extensions/DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
@@ -85,8 +83,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A6EEEAA29F7B9FA0097CAB7 /* FirebaseCrashlytics in Frameworks */,
-				0A6EEEA829F7B9FA0097CAB7 /* FirebaseAnalytics in Frameworks */,
 				DB1EED1B8F91760B686F8205 /* Pods_todoList.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -102,6 +98,13 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01F3E28C29F932E5000F6653 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
 		1242AA8C48C2A279B88DF68E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,6 +119,7 @@
 			children = (
 				1A313B4F26A6F45A00927EC3 /* TodoViewModel.swift */,
 				1AAC894B26B28A5B001F2AA0 /* TodoListViewModel.swift */,
+				01F3E28A29F93105000F6653 /* WeatherViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -143,7 +147,7 @@
 		1A932B44250668C300E138BA /* todoList */ = {
 			isa = PBXGroup;
 			children = (
-				0A6EEEB029F7BEE70097CAB7 /* GoogleService-Info.plist */,
+				01F3E28C29F932E5000F6653 /* Services */,
 				1A932B5B25066A4600E138BA /* ViewControllers */,
 				1A313B4E26A6EB3100927EC3 /* ViewModels */,
 				1A932B5925066A3C00E138BA /* Models */,
@@ -239,17 +243,12 @@
 				1A932B40250668C300E138BA /* Resources */,
 				C7948790F3F4BC1E24020D17 /* [CP] Embed Pods Frameworks */,
 				1ABA3030258CF8F300C59C5E /* ShellScript */,
-				0A6EEEAB29F7BABE0097CAB7 /* ShellScript */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = todoList;
-			packageProductDependencies = (
-				0A6EEEA729F7B9FA0097CAB7 /* FirebaseAnalytics */,
-				0A6EEEA929F7B9FA0097CAB7 /* FirebaseCrashlytics */,
-			);
 			productName = todoList;
 			productReference = 1A932B42250668C300E138BA /* ToDo.app */;
 			productType = "com.apple.product-type.application";
@@ -303,9 +302,6 @@
 				ko,
 			);
 			mainGroup = 1A932B39250668C300E138BA;
-			packageReferences = (
-				0A6EEEA629F7B9FA0097CAB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
-			);
 			productRefGroup = 1A932B43250668C300E138BA /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -323,7 +319,6 @@
 			files = (
 				1A313B5C26A70C0E00927EC3 /* Assets.xcassets in Resources */,
 				1A313B6B26A70CE200927EC3 /* LaunchScreen.storyboard in Resources */,
-				0A6EEEB129F7BEE70097CAB7 /* GoogleService-Info.plist in Resources */,
 				1A313B8426AAAE4B00927EC3 /* TodoTableViewCell.xib in Resources */,
 				1A313B6D26A70CE200927EC3 /* Main.storyboard in Resources */,
 			);
@@ -339,25 +334,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0A6EEEAB29F7BABE0097CAB7 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
-		};
 		1ABA3030258CF8F300C59C5E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -471,6 +447,7 @@
 				1A313B6026A70C4000927EC3 /* DailyTasksViewController.swift in Sources */,
 				1A313B6226A70C4000927EC3 /* CalendarViewController.swift in Sources */,
 				1A932B48250668C300E138BA /* SceneDelegate.swift in Sources */,
+				01F3E28B29F93105000F6653 /* WeatherViewModel.swift in Sources */,
 				01F3C41229F69CDD000F6653 /* WeatherCollectionViewCell.swift in Sources */,
 				1A313B5626A70B3E00927EC3 /* DateFormatter+Extensions.swift in Sources */,
 			);
@@ -651,7 +628,6 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 39;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8L5GQUP5L4;
 				INFOPLIST_FILE = todoList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -767,30 +743,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		0A6EEEA629F7B9FA0097CAB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 10.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		0A6EEEA729F7B9FA0097CAB7 /* FirebaseAnalytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0A6EEEA629F7B9FA0097CAB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAnalytics;
-		};
-		0A6EEEA929F7B9FA0097CAB7 /* FirebaseCrashlytics */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0A6EEEA629F7B9FA0097CAB7 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseCrashlytics;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1A932B3A250668C300E138BA /* Project object */;
 }

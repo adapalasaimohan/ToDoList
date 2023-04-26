@@ -75,7 +75,7 @@ class TodoTableViewCell: UITableViewCell {
             .drive(lblTime.rx.isHidden)
             .disposed(by: disposeBag)
         
-        // 체크박스 버튼
+        //
         viewModel.checkImageString.asDriver(onErrorJustReturn: "circle")
             .map { UIImage(systemName: $0) }
             .drive(btnCheckbox.rx.backgroundImage())

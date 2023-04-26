@@ -48,7 +48,7 @@ class AddTaskViewController: UIViewController {
         // UI Binding
         setupBindings()
         
-        // DatePicker 생성
+        // DatePicker
         addDatePicker()
         addTimePicker()
         
@@ -69,7 +69,7 @@ class AddTaskViewController: UIViewController {
             return
         }
         
-        // 모드에 따라 다르게 표시
+        //
         self.title = "Edit Task"
         btnSave.isEnabled = true
         
@@ -81,7 +81,7 @@ class AddTaskViewController: UIViewController {
         }
         segctrlTime.sendActions(for: .valueChanged)
         
-        // 데이터 채우기
+        //
         txtTitle.text = task.title
         txtDescription.text = task.description
         if let date = task.date, let pickerDate = date.toDate() {
@@ -109,7 +109,7 @@ class AddTaskViewController: UIViewController {
             }
             .drive(btnSave.rx.isEnabled)
             .disposed(by: disposeBag)
-        
+     
         segctrlTime.rx.selectedSegmentIndex.asDriver()
             .map { return ($0 == self.scheduled ? false : true) }
             .drive(onNext: { [weak self] in
@@ -126,6 +126,14 @@ class AddTaskViewController: UIViewController {
         timePicker.rx.date.asDriver()
             .map { $0.toTimeString() }
             .drive(txtTime.rx.text)
+            .disposed(by: disposeBag)
+        
+        txtDescription.rx.text.asDriver()
+            .map {
+                guard let txtDescriptionrx = $0, !txtDescriptionrx.isEmpty else { return false }
+                return true
+            }
+            .drive(btnSave.rx.isEnabled)
             .disposed(by: disposeBag)
     }
     
@@ -178,7 +186,7 @@ class AddTaskViewController: UIViewController {
         }
         let todoObject = Todo(title: txtTitle.text!, date: date, time: time, description: txtDescription.text)
         
-        // DailyTasks 화면으로 돌아가기
+        // DailyTasks
         delegate?.sendData(oldTask: editTask, newTask: todoObject, indexPath: indexPath)
         self.navigationController?.popViewController(animated: true)
     }

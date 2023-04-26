@@ -28,81 +28,44 @@ class DailyTasksViewController: UIViewController{
     private var todoSections: BehaviorRelay<[Task]> = BehaviorRelay(value: [])
     private var dataSource: RxTableViewSectionedReloadDataSource<Task>!
     var viewModel = TodoListViewModel()
+    var currentWeather = WeatherViewModel()
     var disposeBag = DisposeBag()
     var url: String = ""
     var weatherData: WeatherFeed?
     
-    let locationManager = CLLocationManager()
-    var coordinates = CLLocationCoordinate2D(latitude: 16.0686, longitude: 80.5482)
+  
     // MARK: - View Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+//
         self.title = Date.getCurrentDate()
-        // Cell 등록
+        // Cell
         let nibName = UINib(nibName: TodoTableViewCell.nibName, bundle: nil)
         tblTodo.register(nibName, forCellReuseIdentifier: TodoTableViewCell.identifier)
         tblTodo.rowHeight = UITableView.automaticDimension
-        locationManager.delegate = self
-        let status: CLAuthorizationStatus = CLLocationManager.authorizationStatus()
-                if status == CLAuthorizationStatus.notDetermined || status == CLAuthorizationStatus.denied || status == CLAuthorizationStatus.restricted
-                {
-                    locationManager.requestAlwaysAuthorization()
-                }
+      
         // UI Binding
-        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.weatherFeedReceivedNotification(notification:)), name: Notification.Name("weatherFeedReceived"), object: nil)
         setupBindings()
         
-        self.getLocation()
+        
+        
+    }
+    @objc func weatherFeedReceivedNotification(notification: Notification) {
+        DispatchQueue.main.async {
+            self.WeatherCollectionView.reloadData()
+        }
         
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        // 테이블 데이터 갱신
+        //
         tblTodo.reloadData()
     }
     
-    func fetch(urlString:String)
-    {
-        if let url = URL(string: urlString){   //unwrap url
-            
-            URLSession
-                .shared
-                .dataTask(with: url) { [weak self](data, response,error) in
-                    
-                    DispatchQueue.main.async { //need on main thread; publishing changes from background thread isnt allowed
-                        
-                        if let error = error{  //unrap error if is one
-                            print(error)
-                            self?.showAlert(title: "Error", message: error.localizedDescription)
-                        }else{
-                            let decoder = JSONDecoder() //using json decoder to do the work for us
-                            
-                            if let data = data,
-                               let feed = try? decoder.decode(WeatherFeed.self, from: data){
-                                self?.weatherData = feed
-                                self?.WeatherCollectionView.reloadData()
-                                
-//                                self?.updateDisplayableData(feed: feed)   //get the data we need to display to user
-//                                self?.weatherFeedArray.append(feed)   //don't need to, but just save all data returned by api
-                                
-                                //print( feed )
-                            }else{
-                                self?.showAlert(title: "Error", message:"Failed to decode the Weather JSON")
-                                //print("failed to decode")
-                            }
-                        }
-                    }
-                    
-                    
-                }.resume()
-        }
-        
-        
-    }
     
     
     // MARK: - UI Binding
@@ -111,10 +74,10 @@ class DailyTasksViewController: UIViewController{
         dataSource = RxTableViewSectionedReloadDataSource<Task> { dataSource, tableView, indexPath, item in
             let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.identifier, for: indexPath) as! TodoTableViewCell
             
-            // cell 설정
+            // cell
             cell.bind(task: item)
             
-            // 체크박스 선택 시 작업 추가
+            //
             cell.btnCheckbox.indexPath = indexPath
             cell.btnCheckbox.addTarget(self, action: #selector(self.checkboxSelection(_:)), for: .touchUpInside)
             return cell
@@ -187,7 +150,7 @@ class DailyTasksViewController: UIViewController{
     
 
     @IBAction func addTaskButtonPressed(_ sender: UIButton) {
-        // Create Task 화면 표시
+        // Create Task
         guard let addTaskVC = self.storyboard?.instantiateViewController(identifier: AddTaskViewController.storyboardID) as? AddTaskViewController else { return }
         addTaskVC.delegate = self
         addTaskVC.currentDate = viewModel.selectedDate.value
@@ -256,7 +219,7 @@ extension DailyTasksViewController: SendDataDelegate {
         let oldDate = oldTask?.date ?? ""
         let newDate = newTask.date ?? ""
         
-        // OldTask 제거
+        // OldTask
         if let _ = oldTask, let index = indexPath {
             if oldDate.isEmpty {    // Anytime
                 _ = viewModel.remove(section: .anytime, row: index.row, date: nil)
@@ -265,7 +228,7 @@ extension DailyTasksViewController: SendDataDelegate {
             }
         }
         
-        // NewTask 추가
+        // NewTask
         if newDate.isEmpty {    // Anytime
             viewModel.insert(task: newTask, section: .anytime, row: indexPath?.row, date: nil)
         } else {                // Scheduled
@@ -276,7 +239,7 @@ extension DailyTasksViewController: SendDataDelegate {
 
 
 // LOCATION / COORDINATES
-extension DailyTasksViewController: CLLocationManagerDelegate , UICollectionViewDelegate,UICollectionViewDataSource {
+extension DailyTasksViewController:  UICollectionViewDelegate,UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize{
         CGSize(width: collectionView.frame.size.width, height: 50)
@@ -285,51 +248,21 @@ extension DailyTasksViewController: CLLocationManagerDelegate , UICollectionView
     // content of header
  
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.weatherData?.hourly.time.count ?? 0
+        return self.currentWeather.weather?.hourly.time.count ?? 0
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WeatherCollectionViewCell", for: indexPath) as! WeatherCollectionViewCell
-        let time = self.weatherData?.hourly.time[indexPath.row] ?? ""
-        let temperature = self.weatherData?.hourly.temperature_2m[indexPath.row] ?? 0.0
+        let time = self.currentWeather.weather?.hourly.time[indexPath.row] ?? ""
+        let temperature = self.currentWeather.weather?.hourly.temperature_2m[indexPath.row] ?? 0.0
         cell.setupWeather(time: time, weather: temperature)
         return cell
     }
     
     
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        print("location changed")
-        
-        if #available(iOS 14.0, *) {
-            switch manager.authorizationStatus{
-            case .notDetermined:
-                break
-            case .authorizedWhenInUse, .authorizedAlways:
-                getLocation()
-            default:
-                showAlert(title: "Error", message: "Go to settings and allow location services for this app.")
-                
-            }
-        } else {
-            // Fallback on earlier versions
-        }
-        getLocation()
-    }
     
-    
-    func getLocation(){
-        guard let loc = locationManager.location?.coordinate else { return }
-        
-        coordinates = loc
-        
-        let date = Date()
-        let dateFormatter = DateFormatter()
-        
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        let theDate = dateFormatter.string(from: date)
-        self.fetch(urlString:"https://api.open-meteo.com/v1/forecast?latitude=\(coordinates.latitude)&longitude=\(coordinates.longitude)&hourly=temperature_2m,rain&start_date=\(theDate)&end_date=\(theDate)")
-
-    }
+      
 }
 
 extension Date {
